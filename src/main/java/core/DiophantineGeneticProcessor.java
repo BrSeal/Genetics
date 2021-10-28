@@ -14,9 +14,9 @@ public class DiophantineGeneticProcessor {
     static int sumSussesGenerations = 0;    //сколько генераций было суммарно при удачных поисках (для статистики)
     static int sussedCount = 0;             //сколько раз нашли решение (для статистики)
 
-    private static final long MAX_GENERATIONS = 50;     //максимальное количество генераций
-    private static final double MUTATION_CHANCE = 0.1;  // вероятность мутации
-    private static final int POPULATION_SIZE = 50;      // количество особей в популяции
+    private final long maxGenerations;     //максимальное количество генераций
+    private final double mutationChance;  // вероятность мутации
+    private final int populationSize;      // количество особей в популяции
 
     private Random random;
     private int generationCount;
@@ -27,7 +27,10 @@ public class DiophantineGeneticProcessor {
 
     private List<Genome> population;
 
-    public DiophantineGeneticProcessor(int genomeSize, int bound, Function<Genome, Integer> fitnessFunction) {
+    public DiophantineGeneticProcessor(int genomeSize, int bound, Function<Genome, Integer> fitnessFunction, long maxGenerations, double mutationChance, int populationSize ) {
+        this.maxGenerations = maxGenerations;
+        this.mutationChance = mutationChance;
+        this.populationSize = populationSize;
         this.genomeSize = genomeSize;
         this.bound = bound;
         this.fitnessFunction = fitnessFunction;
@@ -35,8 +38,8 @@ public class DiophantineGeneticProcessor {
         random = new Random();
         generationCount = 0;
 
-        population = new ArrayList<>(POPULATION_SIZE);
-        for(int i = 0; i < POPULATION_SIZE; i++) {
+        population = new ArrayList<>(this.populationSize);
+        for(int i = 0; i < this.populationSize; i++) {
             population.add(new Genome(genomeSize, bound));
         }
     }
@@ -48,7 +51,7 @@ public class DiophantineGeneticProcessor {
     public Genome process() {
         Genome best = null;
 
-        while (generationCount <= MAX_GENERATIONS) {
+        while (generationCount <= maxGenerations) {
             for(Genome genome : population) {
                 int fitnessVal = fitnessFunction.apply(genome);
                 genome.setFitnessValue(fitnessVal);
@@ -70,13 +73,13 @@ public class DiophantineGeneticProcessor {
 
         List<Double> probabilities = calcProbabilities();
 
-        for(int i = 0; i < POPULATION_SIZE; i++) {
+        for(int i = 0; i < populationSize; i++) {
             var parent1 = chooseParent(probabilities);
             var parent2 = chooseParent(probabilities);
 
             Genome child = parent1.crossover(parent2);
 
-            if (random.nextDouble() < MUTATION_CHANCE) child.mutate();
+            if (random.nextDouble() < mutationChance) child.mutate();
 
             nextGeneration.add(child);
         }
@@ -89,7 +92,7 @@ public class DiophantineGeneticProcessor {
         double rand = random.nextDouble();
         double cumulative = 0;
 
-        for(int i = 0; i < POPULATION_SIZE; i++) {
+        for(int i = 0; i < populationSize; i++) {
             double next = cumulative + probabilities.get(i);
 
             if (rand > cumulative && rand < next) {

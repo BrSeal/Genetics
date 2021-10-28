@@ -34,10 +34,15 @@ public class Genome {
 
         genes.set(index, random.nextBoolean() ? chromosome - 1 : chromosome + 1);
     }
+//    public void mutate(int bound) {
+//        int index = random.nextInt(genes.size());
+//        int chromosome = genes.get(index);
+//
+//        genes.set(index, random.nextInt(bound));
+//    }
 
     public Genome crossover(Genome another) {
         List<Integer> childGenes = new ArrayList<>();
-
         for(int i = 0; i < genes.size(); i++) {
             childGenes.add(random.nextBoolean() ? genes.get(i) : another.genes.get(i));
         }
