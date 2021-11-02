@@ -19,6 +19,14 @@ public class Genome {
         this.genes = genes;
     }
 
+    public Genome(int genomeSize, int bound, boolean enableNegative) {
+        genes = new ArrayList<>();
+
+        for(int i = 0; i < genomeSize; i++) {
+            genes.add(random.nextInt(bound) * (enableNegative && random.nextBoolean() ? -1 : 1));
+        }
+    }
+
     public Genome(int genomeSize, int bound) {
         genes = new ArrayList<>();
 
@@ -34,12 +42,6 @@ public class Genome {
 
         genes.set(index, random.nextBoolean() ? chromosome - 1 : chromosome + 1);
     }
-//    public void mutate(int bound) {
-//        int index = random.nextInt(genes.size());
-//        int chromosome = genes.get(index);
-//
-//        genes.set(index, random.nextInt(bound));
-//    }
 
     public Genome crossover(Genome another) {
         List<Integer> childGenes = new ArrayList<>();

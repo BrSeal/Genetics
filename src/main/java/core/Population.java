@@ -11,33 +11,33 @@ import java.util.stream.Collectors;
 
 @Getter
 public class Population {
-    int size;
-    int genomeSize;
-    int bound;
-    double mutationChance;
+    private int size;
+    private int genomeSize;
+    private int bound;
+    private double mutationChance;
+    private boolean enableNegative;
 
-    List<Genome> genomes;
-    Random random;
+    private List<Genome> genomes;
+    private Random random;
 
-    Genome best;
+    private Genome best;
 
-    public Population(int size, int genomeSize, int bound, double mutationChance) {
+    public Population(int size, int genomeSize, int bound, double mutationChance, boolean enableNegative) {
         this.size = size;
         this.genomeSize = genomeSize;
         this.bound = bound;
-        this.mutationChance= mutationChance;
+        this.mutationChance = mutationChance;
+        this.enableNegative = enableNegative;
 
         random = new Random();
         genomes = new ArrayList<>(size);
 
         for(int i = 0; i < size; i++) {
-            genomes.add(new Genome(genomeSize, bound));
+            genomes.add(new Genome(genomeSize, bound, enableNegative));
         }
-
-
     }
 
-    public void evaluateGenomes(Function<Genome, Integer> fitnessFunction){
+    public void evaluateGenomes(Function<Genome, Integer> fitnessFunction) {
         for(Genome genome : genomes) {
             int fitnessVal = fitnessFunction.apply(genome);
             genome.setFitnessValue(fitnessVal);
