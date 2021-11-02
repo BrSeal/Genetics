@@ -13,7 +13,7 @@ public class Genome {
     //Число, которое потом проставляет фитнес-функция
     private Integer fitnessValue;
 
-    private Random random = new Random();
+    private static Random random = new Random();
 
     public Genome(List<Integer> genes) {
         this.genes = genes;
